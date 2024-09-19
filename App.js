@@ -1,64 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from 'react-native';
-import { tasks } from './task';
-import {Tasks}from './Tasks'
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import {TasksScreen} from '././sreens/TasksScreen';
+import {MessagemScreen} from '././sreens/MessagemScreen';
+import {SettingsScreen} from '././sreens/SettingsScreen';
+
+
+
+
+const Tab = createMaterialTopTabNavigator()
+
 
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar backgroundColor="#0077B5" />
-      <View style={styles.header}>
-        <ScrollView>
-          <View>
-            {
-              tasks.map((task) => (
-
-          <Tasks tasks={task}></Tasks>
-
-              )
-              )
-            }
-          </View>
-        </ScrollView>
-      </View>
-
-
+    <SafeAreaView style={styles.safeArea}>
+      <NavigationContainer>
+        {/* Definicao das tabs */}
+        <Tab.Navigator
+          initialRouteName='Tasks'
+          screenOptions={{ tabBarIndicatorStyle: { backgroundColor: "red" } }}>
+          <Tab.Screen  name='Message' component={MessagemScreen}/>
+          <Tab.Screen name='Tasks' component={TasksScreen} />
+          <Tab.Screen name='Last Activity' component={SettingsScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 20,
+  safeArea: {
     flex: 1,
-    backgroundColor: '#8dbdeb',
-    marginTop: 25,
-    alignItems: 'center'
-
-
+    marginTop: 20,
   },
-  imageHeader: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    alignSelf: 'center',
-    marginVertical: 10
-  },
-  rowHeader:
-  {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10
-
-
-  },
-  textHeader: {
-    color: '#FFF',
-    fontSize: 35,
-    textAlign: 'center',
-
-
-  },
-
+ 
 });
