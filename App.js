@@ -21,7 +21,7 @@ export default function App() {
           initialRouteName='Tasks'
           screenOptions={{ tabBarIndicatorStyle: { backgroundColor: "red" } }}>
           <Tab.Screen  name='Message' component={MessagemScreen}/>
-          <Tab.Screen name='Tasks' component={TasksScreen} />
+          <Tab.Screen name="Today's Tasks" component={TasksScreen} />
           <Tab.Screen name='Last Activity' component={SettingsScreen} />
         </Tab.Navigator>
       </NavigationContainer>
