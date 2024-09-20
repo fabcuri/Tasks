@@ -1,6 +1,7 @@
 
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import { tasks } from '../task';
 import { Tasks } from '../Tasks';
 
@@ -11,7 +12,69 @@ const dia = today.getDate();
 const mes = today.getMonth() + 1;
 const dataFormatada = `${diaDaSemana},${dia}/${mes}`;
 
+
+
 export function TasksScreen() {
+
+  const [inputValue, setInputValue] = useState("")
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const [tasks, setTasks] = useState([])
+  const [original, setOriginal] = useState([
+    {
+      id: 1,
+      nome: "Estudar",
+      descricao: "Estudar para DevInHouse",
+      status: "false",
+      data: "18 set 2024"
+    },
+    {
+      id: 2,
+      nome: "Pagar boleto",
+      descricao: "Pagar boleto do condominio de minas",
+      status: "false",
+      data: "17 set 2024"
+    },
+    {
+      id: 3,
+      nome: "Estudar 2",
+      descricao: "Estudar para Faculdade",
+      status: "false",
+      data: "18 set 2024"
+    },
+  ])
+
+  const [search, setSearch] = useState("")
+
+  useEffect(() => {
+    /**
+     * "Estudar".includes("") => true
+     * "Pagar boleto".includes("") => true
+     * "Estudar 2".includes("") => true
+     */
+    console.log('usuario digitando no input de busca')
+    const filtrado = original.filter(item =>
+      item.nome.toLocaleLowerCase()
+        .includes(search.toLocaleLowerCase()))
+
+
+    setTasks(filtrado)
+  }, [search, original])
+
+  function novaTarefa() {
+    const newTask = {
+      id: tasks.length + 1,
+      nome: inputValue,
+      descricao: "Exemplo de tarefa criada",
+      status: "false",
+      data: "19 set 2024"
+    }
+
+    // setOriginal(valorAtual => [...valorAtual, newTask])
+    setOriginal(prev => [...prev, newTask])
+    setModalVisible(false)
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#0077B5" />
@@ -21,7 +84,7 @@ export function TasksScreen() {
           <Text>{dataFormatada}</Text>
         </View>
         <TouchableOpacity style={styles.button} >
-          <Text style={styles.buttonText}>+ New Tasks</Text>
+          <Text style={styles.buttonText} onPress={() => setModalVisible(true)}>+ New Tasks</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.textContagem}>
@@ -51,9 +114,13 @@ export function TasksScreen() {
           </View>
         </View>
       </View>
+     
       <View style={styles.header}>
+      <TextInput style={styles.searchInput} placeholder='Buscar tarefa' onChangeText={setSearch} value={search} />
         <ScrollView>
           <View>
+            {tasks.length === 0 ?
+              <Text>Nao existem tarefas cadastradas</Text> : <></>}
             {
               tasks.map((task) => (
 
@@ -64,7 +131,24 @@ export function TasksScreen() {
             }
           </View>
         </ScrollView>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text>Nova Tarefa</Text>
+              <TextInput style={styles.textInput}
+                placeholder='Digite o nome da tarefa'
+                value={inputValue} onChangeText={setInputValue} />
+              <Button title='Cancelar' onPress={() => setModalVisible(false)} />
+              <Button title='Salvar' onPress={novaTarefa} />
+            </View>
+          </View>
+        </Modal>
       </View>
+
 
 
     </SafeAreaView>
@@ -73,10 +157,10 @@ export function TasksScreen() {
 const styles = StyleSheet.create({
 
   header: {
-    padding: 20,
+    padding: 10,
     flex: 1,
     backgroundColor: '#8dbdeb',
-    marginTop: 25,
+    marginTop:3,
     alignItems: 'center'
 
 
@@ -98,7 +182,8 @@ const styles = StyleSheet.create({
   textHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 15
+    marginTop: 15,
+    marginBottom: 15
   },
   textToday: {
     fontWeight: 'bold',
@@ -128,6 +213,40 @@ const styles = StyleSheet.create({
     fontSize: 10, // Tamanho da fonte
     fontWeight: 'bold', // Negrito
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    gap:6
+  },
+  searchInput: {
+    width: 200,
+    height: 32,
+    borderWidth: 1,
+    borderColor: 'black',
+    textAlign:'center',
+    marginBottom:7,
+  },
+  textInput:{
+   fontSize: 25,
+  
+  }
 
 
 
