@@ -18,7 +18,7 @@ export default function App() {
       <NavigationContainer>
         {/* Definicao das tabs */}
         <Tab.Navigator
-          initialRouteName='Tasks'
+          initialRouteName="Today's Tasks"
           screenOptions={{ tabBarIndicatorStyle: { backgroundColor: "red" } }}>
           <Tab.Screen  name='Message' component={MessagemScreen}/>
           <Tab.Screen name="Today's Tasks" component={TasksScreen} />
